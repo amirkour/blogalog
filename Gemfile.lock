@@ -1,0 +1,94 @@
+GIT
+  remote: https://github.com/tonysweefee/mongooz.git
+  revision: 0b2b7b5b624d9063fb8a70c30b645b9a7d2726af
+  specs:
+    mongooz (0.0.1)
+      activerecord
+      mongo
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (4.0.0)
+      activesupport (= 4.0.0)
+      builder (~> 3.1.0)
+    activerecord (4.0.0)
+      activemodel (= 4.0.0)
+      activerecord-deprecated_finders (~> 1.0.2)
+      activesupport (= 4.0.0)
+      arel (~> 4.0.0)
+    activerecord-deprecated_finders (1.0.3)
+    activesupport (4.0.0)
+      i18n (~> 0.6, >= 0.6.4)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    arel (4.0.0)
+    atomic (1.1.14)
+    backports (3.3.4)
+    bson (1.9.2)
+    bson_ext (1.9.2)
+      bson (~> 1.9.2)
+    builder (3.1.4)
+    faraday (0.8.8)
+      multipart-post (~> 1.2.0)
+    haml (4.0.3)
+      tilt
+    hashie (2.0.5)
+    httpauth (0.2.0)
+    i18n (0.6.5)
+    jwt (0.1.8)
+      multi_json (>= 1.5)
+    minitest (4.7.5)
+    mongo (1.9.2)
+      bson (~> 1.9.2)
+    multi_json (1.8.0)
+    multipart-post (1.2.0)
+    oauth2 (0.8.1)
+      faraday (~> 0.8)
+      httpauth (~> 0.1)
+      jwt (~> 0.1.4)
+      multi_json (~> 1.0)
+      rack (~> 1.2)
+    omniauth (1.1.4)
+      hashie (>= 1.2, < 3)
+      rack
+    omniauth-google-oauth2 (0.2.1)
+      omniauth (~> 1.0)
+      omniauth-oauth2
+    omniauth-oauth2 (1.1.1)
+      oauth2 (~> 0.8.0)
+      omniauth (~> 1.0)
+    rack (1.5.2)
+    rack-protection (1.5.0)
+      rack
+    rack-test (0.6.2)
+      rack (>= 1.0)
+    sinatra (1.4.3)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
+    sinatra-contrib (1.4.1)
+      backports (>= 2.0)
+      multi_json
+      rack-protection
+      rack-test
+      sinatra (~> 1.4.0)
+      tilt (~> 1.3)
+    thread_safe (0.1.3)
+      atomic
+    tilt (1.4.1)
+    tzinfo (0.3.37)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bson_ext
+  haml
+  mongooz!
+  omniauth
+  omniauth-google-oauth2
+  sinatra
+  sinatra-contrib
