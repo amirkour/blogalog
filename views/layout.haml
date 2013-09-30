@@ -6,20 +6,28 @@
 		%meta{:name=>"viewport", :content=>"width=device-width, initial-scale=1.0"}
 		%link{:href=>"/css/bootstrap.min.css", :rel=>"stylesheet"}
 		/ %script{:type=>"text/javascript", :src=>"/js/require.min.js"}
-		/ %script{:type=>"text/javascript", :src=>"/js/jquery.min.js"}
+		%script{:type=>"text/javascript", :src=>"/js/lib/jquery.js"}
 		/ %script{:type=>"text/javascript", :src=>"/js/handlebars.js"}
 		/ %script{:type=>"text/javascript", :src=>"/js/underscore.min.js"}
 		/ %script{:type=>"text/javascript", :src=>"/js/backbone.min.js"}
-		/ %script{:type=>"text/javascript", :src=>"/js/bootstrap.min.js"}
+		%script{:type=>"text/javascript", :src=>"/js/lib/bootstrap.js"}
 		/ %script{:type=>"text/javascript", :src=>"/js/blogalog.js"}
 		%script{"data-main"=>"js/main", :src=>"/js/lib/require.js"}
 
 	%body
-		.navbar.navbar-static-top
-			.navbar-inner
-				%ul.nav
-					%li
-						%a{:href=>"/"} Home
-		.container{:style=>"margin-top:10px;"}
-			=yield
+		%nav.navbar.navbar-default{:role=>'navigation'}
+			.navbar-header
+				%button.navbar-toggle{:type=>'button', "data-toggle"=>"collapse", "data-target"=>".navbar-stuff-collapse"}
+					%span.icon-bar
+					%span.icon-bar
+					%span.icon-bar
+				%a.navbar-brand{:href=>to('/')} Blogalog!
 
+			.navbar-stuff-collapse.collapse.navbar-collapse
+				%ul.nav.navbar-nav
+					%li
+						%a{:href=>"#"} hi
+					%li
+						%a{:href=>"#"} bye
+		.container
+			=yield
