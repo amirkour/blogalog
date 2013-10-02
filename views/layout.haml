@@ -10,7 +10,7 @@
 			:javascript
 				var require={
 					config: {
-						'app/blogalog': {
+						'app/router': {
 							initialEntry: #{initial_entry.to_json}
 						}
 					}
@@ -19,17 +19,16 @@
 	%body
 		%nav.navbar.navbar-default{:role=>'navigation'}
 			.navbar-header
-				%button.navbar-toggle{:type=>'button', "data-toggle"=>"collapse", "data-target"=>".navbar-stuff-collapse"}
+				%button.navbar-toggle{:type=>'button', "data-toggle"=>"collapse", "data-target"=>"#navbar-stuff-collapse"}
 					%span.icon-bar
 					%span.icon-bar
 					%span.icon-bar
 				%a.navbar-brand{:href=>to('/')} Blogalog!
 
-			.navbar-stuff-collapse.collapse.navbar-collapse
+			#navbar-stuff-collapse.collapse.navbar-collapse
 				%ul.nav.navbar-nav
 					%li
 						%a{:href=>"#"} hi
 					%li
 						%a{:href=>"#"} bye
-		.container
-			=yield
+		=yield

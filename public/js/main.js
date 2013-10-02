@@ -9,7 +9,10 @@ requirejs.config({
 		"jquery": "lib/jquery",
 		"underscore": "lib/underscore",
 		"backbone": "lib/backbone",
-		"bootstrap": "lib/bootstrap"
+		"bootstrap": "lib/bootstrap",
+		"handlebars": "lib/handlebars",
+		"text": "lib/text",
+		"domReady": "lib/domReady"
 	},
 	shim: {
 		// this is the ID of the module - this is what you 'depend' on
@@ -23,10 +26,16 @@ requirejs.config({
 			deps: ['jquery','underscore'],
 			exports: 'Backbone'
 		},
-		'bootstrap': ['jquery']
+		'bootstrap': ['jquery'],
+		'handlebars':{
+			deps: [],
+			exports: 'Handlebars'
+		}
 	}
 });
 
-require(['app/blogalog'], function(blogalog){
-	blogalog.start();
+require(['bootstrap', 'domReady', 'app/router'], function(undefined, domReady, AppStartFunction){
+	domReady(function(){
+		AppStartFunction.call();
+	})
 });
