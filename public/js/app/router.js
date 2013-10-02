@@ -3,12 +3,17 @@ define([ 'backbone', 'views/views', 'models/models', 'module'],
 
 		var BlogalogRouter = Backbone.Router.extend({
 			routes:{
-				"": "rootRoute",
+				"": "homeRoute",
+				"/": "homeRoute",
 				"about": "aboutRoute"
 			},
 
-			rootRoute: function(){
-
+			homeRoute: function(){
+				var pageConfig=module.config() || {};
+				var initialModelJSON=pageConfig.initialEntry || {title: "no entries detected!?", body: "phooey ..."};
+				var model=new Models.EntryModel(initialModelJSON);
+				var view=new Views.HomeView({model: model});
+				view.render();
 			},
 
 			aboutRoute: function(){

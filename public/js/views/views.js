@@ -1,8 +1,11 @@
 define([
+	"views/home",
 	"views/about"
 ],
-function(AboutView){
+function(HomeView,
+		 AboutView){
 	return {
+		HomeView: HomeView,
 		AboutView: AboutView
 	};
 });
