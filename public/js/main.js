@@ -1,6 +1,9 @@
 // baseUrl will be /js/ b/c data-main=js/main
 requirejs.config({
 
+	// gotta ditch this when you go to prod
+	urlArgs: 'bust=' + (new Date()).getTime(),
+
 	// define path aliases for the shim libraries
 	paths: {
 		"jquery": "lib/jquery",
