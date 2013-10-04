@@ -2,7 +2,140 @@
 	.visible-xs
 		New blog entries not supported on mobile!
 	.visible-sm.visible-md.visible-lg
-		hi this is the new page
+		.row.text-center{:'data-bind'=>'visible: busy'}
+			Loading ...
+		.row.alert.alert-danger{:'data-bind'=>'visible: errors().length > 0'}
+			%ul{:'data-bind'=>'foreach: errors'}
+				%li{:'data-bind'=>'text: $data'}
+		.row
+			.col-sm-12.form-group
+				%button.btn.btn-success{:type=>'button', :"data-bind"=>"click: fnSaveNewEntry"} Save
+		.row
+			.col-sm-9
+				.form-group
+					%input.form-control{:type=>'text', :placeholder=>'title', :'data-bind'=>"value: newEntry.title"}
+				.form-group
+					%textarea.form-control{:placeholder=>'body', :'data-bind'=>"value: newEntry.body"}
+			.col-sm-3
+				%form{:'data-bind'=>'submit: fnAddTag'}
+					.form-group
+						%input.form-control{:type=>'text', :'data-bind'=>'value: tagInput', :placeholder=>'tag'}
+				%table.table.table-condensed{:'data-bind'=>'foreach: newEntry.tags'}
+					%tr
+						%td
+							%span{:'data-bind'=>'text: $data'}
+						%td.text-right
+							%a{:'data-bind'=>'click: $parent.fnRemoveTag.bind($parent,$data)', :style=>'cursor:pointer;'} Del
+
+
+	:javascript
+		(function($,ko,_,window,undefined){
+			var allTags=#{all_tags.to_json};
+			var entry_post_url="#{to('/entries')}";
+
+			var Entry=function(entry_json_from_server){
+				var self=this;
+				self.url=entry_post_url;
+				entry_json_from_server || (entry_json_from_server = {});
+				self._id=entry_json_from_server._id;
+				self.title=ko.observable(entry_json_from_server.title || '');
+				self.body=ko.observable(entry_json_from_server.body || '');
+				self.tags=ko.observableArray(entry_json_from_server.tags || []);
+			};
+			_.extend(Entry.prototype, {
+				fnEmpty: function(){},
+				toPlainJSON: function(){
+					var self=this;
+					return {
+						_id: self._id,
+						title: self.title(),
+						body: self.body(),
+						tags: self.tags()
+					};
+				},
+				save: function(options){
+					var self=this;
+					options || (options={});
+					var strMethod=(self._id) ? "put" : "post";
+					var successCB=options.success || self.fnEmpty;
+					var errorCB=options.error || self.fnEmpty;
+					var alwaysCB=options.always || self.fnEmpty;
+					var selfAsJSON=self.toPlainJSON();
+					$.ajax({
+						url: self.url,
+						data: selfAsJSON,
+						dataType: 'json',
+						type: strMethod,
+						success: function(newEntryJSON){
+							if(strMethod==='post') self._id=newEntryJSON._id;
+							successCB.call(self);
+						},
+						error: function(jqXHR,strStatus,strError){
+							serverErrorJSON=null;
+							try{
+								serverErrorJSON=JSON.parse(jqXHR.responseText);
+							}catch(e){
+								serverErrorJSON={error:"Unknown error"}
+							}
+							errorCB.call(self,serverErrorJSON);
+						}
+					}).always(alwaysCB);
+				}
+			})
+
+			var ViewModel=function(){
+				var self=this;
+				self.busy=ko.observable(false);
+				self.newEntry=new Entry();
+				self.tagInput=ko.observable();
+				self.errors=ko.observableArray();
+			};
+			_.extend(ViewModel.prototype, {
+				fnSaveNewEntry: function(){
+					var self=this;
+					if(self.newEntry.title()===''){
+						self.errors.removeAll();
+						self.errors.push("Missing title");
+						return;
+					}
+					if(self.newEntry.body()===''){
+						self.errors.removeAll();
+						self.errors.push("Missing body");
+						return;
+					}
+
+					self.busy(true);
+					self.newEntry.save({
+						success: function(){
+							var newEntryJSON=this;
+						},
+						error: function(erroJSON){
+							self.errors.removeAll();
+							self.errors.push(erroJSON.error);
+						},
+						always: function(){
+							self.busy(false);
+						}
+					})
+				},
+				fnAddTag: function(){
+					var self=this;
+					var strNewTag=self.tagInput();
+					self.tagInput('');
+					if(strNewTag==='') return false;
+					if(self.newEntry.tags.indexOf(strNewTag) >= 0) return false;
+
+					self.newEntry.tags.push(strNewTag);
+					return false; // stop form submit from bubbling
+				},
+				fnRemoveTag: function(strTagToRemove){
+					var self=this;
+					if(!strTagToRemove) return;
+					self.newEntry.tags.remove(strTagToRemove);
+				}
+			});
+			ko.applyBindings(new ViewModel());
+		})(jQuery,ko,_,window);//TODO - do i need jquery?
 -else
 	.container
 		Nice try

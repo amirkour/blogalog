@@ -1,7 +1,21 @@
 class Blogalog < Sinatra::Base
 
+	before '/entries*/*' do
+		halt(401, "no thanks!") unless logged_in?
+		@creating=true
+	end
 	get '/entries/new' do
-		haml :"entries/new"
+		all_tag_objects=Tag.db_query || []
+		all_tags=all_tag_objects.map{|tag| tag[:tag]}
+
+		haml :"entries/new", :locals=>{:all_tags=>all_tags}
+	end
+	post '/entries' do
+		sleep(1)
+		halt 500, json({:error=>"Unimplemented entry creation"})
+	end
+	put '/entries' do
+		halt 500, json({:error=>"Unimplemented entry update"})
 	end
 
 	get "/" do
