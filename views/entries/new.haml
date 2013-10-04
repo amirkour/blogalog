@@ -1,15 +1,20 @@
--if logged_in?
+-unless logged_in?
+	.container
+		Nice try
+-else
 	.visible-xs
 		New blog entries not supported on mobile!
 	.visible-sm.visible-md.visible-lg
 		.row.text-center{:'data-bind'=>'visible: busy'}
 			Loading ...
+		.row.text-center.alert.alert-success{:'data-bind'=>'visible: success'}
+			Success!
 		.row.alert.alert-danger{:'data-bind'=>'visible: errors().length > 0'}
 			%ul{:'data-bind'=>'foreach: errors'}
 				%li{:'data-bind'=>'text: $data'}
 		.row
 			.col-sm-12.form-group
-				%button.btn.btn-success{:type=>'button', :"data-bind"=>"click: fnSaveNewEntry"} Save
+				%button.btn.btn-success{:type=>'button', :"data-bind"=>"click: fnSaveNewEntry, disable: success"} Save
 		.row
 			.col-sm-9
 				.form-group
@@ -86,6 +91,7 @@
 			var ViewModel=function(){
 				var self=this;
 				self.busy=ko.observable(false);
+				self.success=ko.observable(false);
 				self.newEntry=new Entry();
 				self.tagInput=ko.observable();
 				self.errors=ko.observableArray();
@@ -108,6 +114,8 @@
 					self.newEntry.save({
 						success: function(){
 							var newEntryJSON=this;
+							self.errors.removeAll();
+							self.success(true);
 						},
 						error: function(erroJSON){
 							self.errors.removeAll();
@@ -136,6 +144,3 @@
 			});
 			ko.applyBindings(new ViewModel());
 		})(jQuery,ko,_,window);//TODO - do i need jquery?
--else
-	.container
-		Nice try
