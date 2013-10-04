@@ -11,7 +11,6 @@ class Blogalog < Sinatra::Base
 		haml :"entries/new", :locals=>{:all_tags=>all_tags}
 	end
 	post '/entries' do
-		logger.info("Creating new entry ...");
 		title=request[:title] || ''
 		body=request[:body] || ''
 		tags=request[:tags] || []

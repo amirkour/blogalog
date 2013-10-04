@@ -14,7 +14,7 @@
 				%li{:'data-bind'=>'text: $data'}
 		.row
 			.col-sm-12.form-group
-				%button.btn.btn-success{:type=>'button', :"data-bind"=>"click: fnSaveNewEntry, disable: saveButtonEnabled"} Save
+				%button.btn.btn-success{:type=>'button', :"data-bind"=>"click: fnSaveNewEntry, disable: busy"} Save
 		.row
 			.col-sm-9
 				.form-group
@@ -92,9 +92,6 @@
 				var self=this;
 				self.busy=ko.observable(false);
 				self.success=ko.observable(false);
-				self.saveButtonEnabled=ko.computed(function(){
-					return self.busy() || self.success();
-				})
 				self.newEntry=new Entry();
 				self.tagInput=ko.observable();
 				self.errors=ko.observableArray();
@@ -103,6 +100,7 @@
 				fnSaveNewEntry: function(){
 					var self=this;
 
+					self.success(false);
 					self.busy(true);
 					self.newEntry.save({
 						success: function(){
