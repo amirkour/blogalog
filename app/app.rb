@@ -1,6 +1,6 @@
 class Blogalog < Sinatra::Base
 
-	before '/entries*/*' do
+	before '/entries**' do
 		halt(401, "no thanks!") unless logged_in?
 		@creating=true
 	end
@@ -11,8 +11,25 @@ class Blogalog < Sinatra::Base
 		haml :"entries/new", :locals=>{:all_tags=>all_tags}
 	end
 	post '/entries' do
-		sleep(1)
-		halt 500, json({:error=>"Unimplemented entry creation"})
+		logger.info("Creating new entry ...");
+		title=request[:title] || ''
+		body=request[:body] || ''
+		tags=request[:tags] || []
+		
+		halt 400, json({:error=>"Missing required title"}) unless title.length > 0
+		halt 400, json({:error=>"Missing required body"}) unless body.length > 0
+		new_entry=Entry.new
+		new_entry[:title]=title
+		new_entry[:body]=body
+		new_entry[:tags]=tags
+
+		begin
+			new_entry.db_insert
+		rescue Exception => e
+			halt 500, json({:error=>"Failed to insert w/ the following error: #{e.message}"})
+		end
+
+		json(new_entry)
 	end
 	put '/entries' do
 		halt 500, json({:error=>"Unimplemented entry update"})

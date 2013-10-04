@@ -102,16 +102,6 @@
 			_.extend(ViewModel.prototype, {
 				fnSaveNewEntry: function(){
 					var self=this;
-					if(self.newEntry.title()===''){
-						self.errors.removeAll();
-						self.errors.push("Missing title");
-						return;
-					}
-					if(self.newEntry.body()===''){
-						self.errors.removeAll();
-						self.errors.push("Missing body");
-						return;
-					}
 
 					self.busy(true);
 					self.newEntry.save({

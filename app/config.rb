@@ -5,6 +5,7 @@ class Blogalog < Sinatra::Base
 	register Sinatra::JSON
 	
 	configure :development do
+		set :logging=>true
 		register Sinatra::Reloader
 		Mongooz.defaults :db=>"blogalog_test"
 	end
