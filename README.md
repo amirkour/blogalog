@@ -11,6 +11,7 @@ A humble attempt at bringing together (and continuing to learn more about) a sin
       <li>backbonejs (and underscorejs)</li>
       <li>handlebarsjs</li>
       <li>jquery</li>
+      <li>knockout</li>
     </ul>
   </li>
   <li>ruby, sinatra</li>
