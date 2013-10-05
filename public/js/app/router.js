@@ -5,7 +5,9 @@ define([ 'backbone', 'views/views', 'models/models', 'module'],
 			routes:{
 				"": "homeRoute",
 				"/": "homeRoute",
-				"about": "aboutRoute"
+				"about": "aboutRoute",
+				"tags": "tagsHomeRoute",
+				"tags/:name": "tagsSpecificRoute"
 			},
 
 			homeRoute: function(){
@@ -19,6 +21,14 @@ define([ 'backbone', 'views/views', 'models/models', 'module'],
 			aboutRoute: function(){
 				var view=new Views.AboutView();
 				view.render();
+			},
+
+			tagsHomeRoute: function(){
+				alert("tags landing page");
+			},
+
+			tagsSpecificRoute: function(name){
+				alert("tags details page for " + name);
 			}
 		});
 
