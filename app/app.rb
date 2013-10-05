@@ -11,16 +11,10 @@ class Blogalog < Sinatra::Base
 		haml :"entries/new", :locals=>{:all_tags=>all_tags}
 	end
 	post '/entries' do
-		title=request[:title] || ''
-		body=request[:body] || ''
-		tags=request[:tags] || []
+		new_entry=Entry.from_request_params(params)
 		
-		halt 400, json({:error=>"Missing required title"}) unless title.length > 0
-		halt 400, json({:error=>"Missing required body"}) unless body.length > 0
-		new_entry=Entry.new
-		new_entry[:title]=title
-		new_entry[:body]=body
-		new_entry[:tags]=tags
+		halt 400, json({:error=>"Missing required title"}) unless new_entry[:title]
+		halt 400, json({:error=>"Missing required body"}) unless new_entry[:body]
 
 		begin
 			new_entry.db_insert
