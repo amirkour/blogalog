@@ -9,19 +9,32 @@ class Entry<Mongooz::MongoozHash
 			# leave the _id param off if it's not in the param hash,
 			# otherwise you might end up trying to store a hash in mongo
 			# with _id=nil
-			if params[:_id] && params[:_id].length>0
-				new_entry[:_id]=params[:_id]
+			if params[:_id]
+
+				# the id goes in and out of the web tier looking like this:
+				# {:'$oid'=>'big fat bson string'}
+				new_entry_id_hash=params[:_id]
+				raise "Expected _id of entry to be a hash" unless new_entry_id_hash.kind_of?(Hash)
+				raise "Expected _id hash of entry to have an $oid key" unless new_entry_id_hash[:'$oid']
+				new_entry[:_id]=BSON.ObjectId(new_entry_id_hash[:'$oid'])
+			end
+			
+			if params[:created_at].kind_of?(String)
+				new_entry[:created_at]=Time.iso8601(params[:created_at]).utc
+			else
+				new_entry[:created_at]=Time.now.utc
 			end
 
 			new_entry[:title]=params[:title] && params[:title].length>0 ? params[:title] : nil
 			new_entry[:body]=params[:body] && params[:body].length>0 ? params[:body] : nil
 			new_entry[:tags]=params[:tags]
+
 			new_entry
 		end
 	end
 
 	def db_insert(options={})
-		self[:created_at]=Time.now
+		self[:created_at]=Time.now.utc unless self[:created_at].kind_of?(Time)
 		super(options)
 	end
 end

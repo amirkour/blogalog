@@ -1,5 +1,6 @@
 require 'bundler'
 Bundler.setup(:default)
+require 'time'
 require 'haml'
 require 'json'
 require 'sinatra/base'

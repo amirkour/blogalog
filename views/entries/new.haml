@@ -46,6 +46,7 @@
 				self.title=ko.observable(entry_json_from_server.title || '');
 				self.body=ko.observable(entry_json_from_server.body || '');
 				self.tags=ko.observableArray(entry_json_from_server.tags || []);
+				self.created_at=entry_json_from_server.created_at ? new Date(entry_json_from_server.created_at) : new Date();
 			};
 			_.extend(Entry.prototype, {
 				fnEmpty: function(){},
@@ -55,7 +56,8 @@
 						_id: self._id,
 						title: self.title(),
 						body: self.body(),
-						tags: self.tags()
+						tags: self.tags(),
+						created_at: self.created_at.toISOString()
 					};
 				},
 				save: function(options){

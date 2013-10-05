@@ -13,6 +13,7 @@ class Blogalog < Sinatra::Base
 	post '/entries' do
 		new_entry=Entry.from_request_params(params)
 		
+		halt 500, json({:error=>"Failed to retrieve new entry from request params!?"}) unless new_entry
 		halt 400, json({:error=>"Missing required title"}) unless new_entry[:title]
 		halt 400, json({:error=>"Missing required body"}) unless new_entry[:body]
 
@@ -25,7 +26,19 @@ class Blogalog < Sinatra::Base
 		json(new_entry)
 	end
 	put '/entries' do
-		halt 500, json({:error=>"Unimplemented entry update"})
+		entry_to_update=Entry.from_request_params(params)
+
+		halt 500, json({:error=>"Failed to retrieve new entry from request params!?"}) unless entry_to_update
+		halt 400, json({:error=>"Missing required title"}) unless entry_to_update[:title]
+		halt 400, json({:error=>"Missing required body"}) unless entry_to_update[:body]
+
+		begin
+			entry_to_update.db_update
+		rescue Exception => e
+			halt 500, json({:error=>"Failed to update w/ the following error: #{e.message}"})
+		end
+
+		json(entry_to_update)
 	end
 
 	get "/" do
