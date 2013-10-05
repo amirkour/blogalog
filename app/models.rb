@@ -1,5 +1,7 @@
 
-class Tag<Mongooz::MongoozHash; end
+# class Tag<Mongooz::MongoozHash
+
+# end
 class Entry<Mongooz::MongoozHash
 	class << self
 		def from_request_params(params=nil)
@@ -30,6 +32,15 @@ class Entry<Mongooz::MongoozHash
 			new_entry[:tags]=params[:tags]
 
 			new_entry
+		end
+		def distinct_tags
+			options=set_db_options({})
+			tags=nil
+			Mongooz::Base.collection(options) do |col|
+				tags=col.distinct('tags')
+			end
+
+			tags || []
 		end
 	end
 

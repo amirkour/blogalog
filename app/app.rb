@@ -41,6 +41,13 @@ class Blogalog < Sinatra::Base
 		json(entry_to_update)
 	end
 
+	get "/tags" do
+		json(Entry.distinct_tags)
+	end
+	get "/tags/:name" do
+		raise "not implemented"
+	end
+
 	get "/" do
 
 		# mongooz is too dumb to do all the sorting and junk ... gotta do it myself. fail.
