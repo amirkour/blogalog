@@ -36,8 +36,13 @@ class Entry<Mongooz::MongoozHash
 		def distinct_tags
 			options=set_db_options({})
 			tags=nil
+
+			pipe_one={"$unwind"=>"$tags"}
+			pipe_two={"$group"=>{"_id"=>"$tags", "entries"=>{"$sum"=>1}}}
+			pipe_three={"$sort"=>{"_id"=>1}}
 			Mongooz::Base.collection(options) do |col|
-				tags=col.distinct('tags')
+				# tags=col.distinct('tags')
+				tags=col.aggregate([pipe_one, pipe_two, pipe_three])
 			end
 
 			tags || []
