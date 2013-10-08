@@ -45,7 +45,8 @@ class Blogalog < Sinatra::Base
 		json(Entry.distinct_tags)
 	end
 	get "/tags/:name" do
-		raise "not implemented"
+		tag_name=params[:name]
+		json(Entry.entries_for_tag(tag_name))
 	end
 
 	get "/" do

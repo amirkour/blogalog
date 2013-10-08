@@ -57,6 +57,20 @@ class Entry<Mongooz::MongoozHash
 			
 			result
 		end
+		def entries_for_tag(tag)
+			options=set_db_options({})
+			results=[]
+			Mongooz::Base.collection(options) do |col|
+				entries=col.find({:tags=>tag}).sort({:created_at=>-1})
+				entries.each do |entry|
+					typed_result = typified_result_hash_or_nil(entry)
+					results << typed_result if typed_result
+				end
+			end
+
+			results=nil if results.count <= 0
+			results
+		end
 	end
 
 	def db_insert(options={})
