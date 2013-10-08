@@ -1,0 +1,9 @@
+<h4 class="text-center">All Tags</h4>
+<hr/>
+{{#each this}}
+	<div class="form-group">
+		<a class="btn btn-primary" href="#/tags/{{_id}}"><span class="label">{{entries}}</span> {{_id}}</a>
+	</div>
+{{else}}
+	<div>No tags!?</div>
+{{/each}}

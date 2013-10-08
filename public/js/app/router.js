@@ -27,7 +27,8 @@ define([ 'backbone', 'views/views', 'models/models', 'module'],
 				var tags=new Models.TagCollection();
 				tags.fetch({
 					success: function(collection,response,options){
-						alert('hi');
+						var view=new Views.TagCollectionView({collection: collection});
+						view.render();
 					},
 					error: function(collection,response,options){
 						var view=new Views.ErrorView({model: new Backbone.Model(response.responseJSON)});

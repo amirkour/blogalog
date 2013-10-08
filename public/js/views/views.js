@@ -1,14 +1,17 @@
 define([
 	"views/error",
 	"views/home",
-	"views/about"
+	"views/about",
+	"views/tagcollection"
 ],
 function(ErrorView,
 		 HomeView,
-		 AboutView){
+		 AboutView,
+		 TagCollectionView){
 	return {
 		ErrorView: ErrorView,
 		HomeView: HomeView,
-		AboutView: AboutView
+		AboutView: AboutView,
+		TagCollectionView: TagCollectionView
 	};
 });
