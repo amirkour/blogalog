@@ -38,7 +38,18 @@ define([ 'backbone', 'views/views', 'models/models', 'module'],
 			},
 
 			tagsSpecificRoute: function(name){
-				alert("tags details page for " + name);
+				var tag=new Backbone.Model({tag:name});
+				var entries=new Models.EntryCollection({tag:name});
+				entries.fetch({
+					success: function(collection,response,options){
+						var view=new Views.TagView({model:tag, collection:collection});
+						view.render();
+					},
+					error: function(collection,response,options){
+						var view=new Views.ErrorView({model: new Backbone.Model(response.responseJSON)});
+						view.render();
+					}
+				})
 			}
 		});
 

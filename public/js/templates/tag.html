@@ -1,0 +1,20 @@
+{{#if tag}}
+	<h4 class="text-center">{{tag.tag}}</h4>
+	<hr />
+	{{#if entries}}
+		<div class="row">
+			<div class="col-xs-5"><b>Created</b></div>
+			<div class="col-xs-7"><b>Title</b></div>
+		</div>
+		{{#each entries}}
+			<div class="row">
+				<div class="col-xs-5">{{created_at}}</div>
+				<div class="col-xs-7">{{title}}</div>
+			</div>
+		{{/each}}
+	{{else}}
+		<p>No entries associated with this tag</p>
+	{{/if}}
+{{else}}
+	No tag model was found!?
+{{/if}}

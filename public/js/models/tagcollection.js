@@ -1,4 +1,4 @@
-define(['backbone'], function(Backbone, TagModel){
+define(['backbone'], function(Backbone){
 	var TagModelForCollection = Backbone.Model.extend({
 		idAttribute: "_id"
 	});
