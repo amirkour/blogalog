@@ -1,6 +1,10 @@
-define(['backbone', 'models/tag'], function(Backbone, TagModel){
+define(['backbone'], function(Backbone, TagModel){
+	var TagModelForCollection = Backbone.Model.extend({
+		idAttribute: "_id"
+	});
+
 	return Backbone.Collection.extend({
-		model: TagModel,
+		model: TagModelForCollection,
 		url: '/tags'
 	})
 })
