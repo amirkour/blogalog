@@ -24,7 +24,16 @@ define([ 'backbone', 'views/views', 'models/models', 'module'],
 			},
 
 			tagsHomeRoute: function(){
-				alert("tags landing page");
+				var tags=new Models.TagCollection();
+				tags.fetch({
+					success: function(collection,response,options){
+						alert('hi');
+					},
+					error: function(collection,response,options){
+						var view=new Views.ErrorView({model: new Backbone.Model(response.responseJSON)});
+						view.render();
+					}
+				})
 			},
 
 			tagsSpecificRoute: function(name){

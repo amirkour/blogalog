@@ -1,8 +1,14 @@
 define([
-	'models/entry'
+	'models/entry',
+	'models/tag',
+	'models/tagcollection'
 ],
-function(EntryModel){
+function(EntryModel,
+		 TagModel,
+		 TagCollection){
 	return {
-		EntryModel: EntryModel
+		EntryModel: EntryModel,
+		TagModel: TagModel,
+		TagCollection: TagCollection
 	};
 });
