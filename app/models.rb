@@ -47,6 +47,16 @@ class Entry<Mongooz::MongoozHash
 
 			tags || []
 		end
+		def latest
+			options=set_db_options({})
+			result=nil
+			Mongooz::Base.collection(options) do |col|
+				entries=col.find().sort({:created_at => -1}).limit(1)
+				result=typified_result_hash_or_nil(entries.next) if entries and entries.count(true) == 1
+			end
+			
+			result
+		end
 	end
 
 	def db_insert(options={})

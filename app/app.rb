@@ -5,8 +5,8 @@ class Blogalog < Sinatra::Base
 		@creating=true
 	end
 	get '/entries/new' do
-		all_tag_objects=Tag.db_query || []
-		all_tags=all_tag_objects.map{|tag| tag[:tag]}
+		all_tags_and_their_counts=Entry.distinct_tags || []
+		all_tags=all_tags_and_their_counts.map{|tag_with_count| tag_with_count['_id']}
 
 		haml :"entries/new", :locals=>{:all_tags=>all_tags}
 	end
@@ -49,21 +49,7 @@ class Blogalog < Sinatra::Base
 	end
 
 	get "/" do
-
-		# mongooz is too dumb to do all the sorting and junk ... gotta do it myself. fail.
-		mongooz_opts=Entry.set_db_options Mongooz.defaults
-		result=nil
-		begin
-			Mongooz::Base.collection(mongooz_opts) do |col|
-				entries=col.find().sort({:created_at=>-1}).limit(1)
-				raise "Got no entries from sorted query" unless entries
-				raise "Expected 1 result and got #{entries.count} instead" unless entries.count(true)==1
-				result=Entry.typified_result_hash_or_nil entries.next
-			end
-		rescue Exception=>e
-			result=Entry.typified_result_hash_or_nil({:title=>'There was an error retrieving the first blog entry!?',:body=>e.message})
-		end
-
+		result=Entry.latest
 		haml :index, :locals=>{:initial_entry=>result}
 	end
 
