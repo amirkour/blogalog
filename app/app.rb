@@ -1,6 +1,9 @@
 class Blogalog < Sinatra::Base
 
-	before '/entries**' do
+	#
+	# all routes at /entries/new are sevicing the knockout app for creating new blog entries...
+	#
+	before '/entries/new' do
 		halt(401, "no thanks!") unless logged_in?
 		@creating=true
 	end
@@ -10,7 +13,7 @@ class Blogalog < Sinatra::Base
 
 		haml :"entries/new", :locals=>{:all_tags=>all_tags}
 	end
-	post '/entries' do
+	post '/entries/new' do
 		new_entry=Entry.from_request_params(params)
 		
 		halt 500, json({:error=>"Failed to retrieve new entry from request params!?"}) unless new_entry
@@ -25,7 +28,7 @@ class Blogalog < Sinatra::Base
 
 		json(new_entry)
 	end
-	put '/entries' do
+	put '/entries/new' do
 		entry_to_update=Entry.from_request_params(params)
 
 		halt 500, json({:error=>"Failed to retrieve new entry from request params!?"}) unless entry_to_update
@@ -41,6 +44,14 @@ class Blogalog < Sinatra::Base
 		json(entry_to_update)
 	end
 
+	#
+	# all routes at /entries are servicing the SPA via backbone models/collections
+	#
+	get "/entries/:id" do
+		halt 500, json({:error=>"unsupported entry retrieval by id"})
+	end
+
+	# all routes at /tags are servicing the SPA via backbone models/collections
 	get "/tags" do
 		json(Entry.distinct_tags)
 	end
@@ -49,6 +60,7 @@ class Blogalog < Sinatra::Base
 		json(Entry.entries_for_tag(tag_name))
 	end
 
+	# load the single page app!
 	get "/" do
 		result=Entry.latest
 		haml :index, :locals=>{:initial_entry=>result}

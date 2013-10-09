@@ -5,7 +5,7 @@ define(['backbone','handlebars'], function(Backbone,Handlebars){
 			body: ""
 		},
 
-		url: "entries",
+		url: "/entries",
 
 		initialize: function(){
 			
