@@ -7,7 +7,8 @@ define([ 'backbone', 'views/views', 'models/models', 'module'],
 				"/": "homeRoute",
 				"about": "aboutRoute",
 				"tags": "tagsHomeRoute",
-				"tags/:name": "tagsSpecificRoute"
+				"tags/:name": "tagsSpecificRoute",
+				"entries/:id": "entryRoute"
 			},
 
 			homeRoute: function(){
@@ -46,6 +47,20 @@ define([ 'backbone', 'views/views', 'models/models', 'module'],
 						view.render();
 					},
 					error: function(collection,response,options){
+						var view=new Views.ErrorView({model: new Backbone.Model(response.responseJSON)});
+						view.render();
+					}
+				})
+			},
+
+			entryRoute: function(id){
+				var model=new Models.EntryModel({id:id});
+				model.fetch({
+					success: function(model, response, options){
+						var view=new Views.HomeView({model: model});
+						view.render();
+					},
+					error: function(model, response, options){
 						var view=new Views.ErrorView({model: new Backbone.Model(response.responseJSON)});
 						view.render();
 					}

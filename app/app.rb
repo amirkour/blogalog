@@ -1,7 +1,7 @@
 class Blogalog < Sinatra::Base
 
 	#
-	# all routes at /entries/new are sevicing the knockout app for creating new blog entries...
+	# all routes at /entries/new are servicing the knockout app for creating new blog entries...
 	#
 	before '/entries/new' do
 		halt(401, "no thanks!") unless logged_in?
@@ -48,10 +48,12 @@ class Blogalog < Sinatra::Base
 	# all routes at /entries are servicing the SPA via backbone models/collections
 	#
 	get "/entries/:id" do
-		halt 500, json({:error=>"unsupported entry retrieval by id"})
+		json(Entry.db_get_with_bson_string(params[:id]))
 	end
 
+	#
 	# all routes at /tags are servicing the SPA via backbone models/collections
+	#
 	get "/tags" do
 		json(Entry.distinct_tags)
 	end
@@ -60,7 +62,9 @@ class Blogalog < Sinatra::Base
 		json(Entry.entries_for_tag(tag_name))
 	end
 
-	# load the single page app!
+	#
+	# load the single page app - require.js is gonna take over
+	#
 	get "/" do
 		result=Entry.latest
 		haml :index, :locals=>{:initial_entry=>result}

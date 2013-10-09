@@ -9,7 +9,7 @@
 		{{#each entries}}
 			<div class="row">
 				<div class="col-xs-5">{{created_at}}</div>
-				<div class="col-xs-7">{{title}}</div>
+				<div class="col-xs-7"><a href="#/entries/{{_id.$oid}}">{{title}}</a></div>
 			</div>
 		{{/each}}
 	{{else}}
