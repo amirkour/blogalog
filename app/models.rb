@@ -3,7 +3,7 @@
 
 # end
 class Entry<Mongooz::MongoozHash
-	class << self
+	class<<self
 		def from_request_params(params=nil)
 			return nil unless params.kind_of?(Hash)
 			new_entry=Entry.new
@@ -38,7 +38,10 @@ class Entry<Mongooz::MongoozHash
 			# { "0" => {:type=>'paragraph', :text=>'some para text'}, "1" => {...}, ... }
 			if params[:bodySections] && params[:bodySections].length>0
 				body_sections=[]
-				params[:bodySections].each{|index,section| body_sections << section}
+				params[:bodySections].each do |index,section|
+					section[:text]=get_text_processor_for(section[:type]).call(section[:text])
+					body_sections << section
+				end
 				new_entry[:bodySections]=body_sections
 			else
 				new_entry[:bodySections]=nil
@@ -47,6 +50,18 @@ class Entry<Mongooz::MongoozHash
 			new_entry[:title]=params[:title] && params[:title].length>0 ? params[:title] : nil
 			new_entry[:tags]=params[:tags]
 			new_entry
+		end
+		def get_text_processor_for(body_type)
+			case body_type
+			when "paragraph", "header", "code"
+				Proc.new do |section_text|
+					break unless section_text
+					section_text=section_text.strip
+					section_text.sub(/[\n]/, "<br/>")
+				end
+			else
+				Proc.new{|section_text|}
+			end
 		end
 		def distinct_tags
 			options=set_db_options({})
