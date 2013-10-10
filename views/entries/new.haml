@@ -15,15 +15,25 @@
 		.row
 			.col-sm-12.form-group
 				%button.btn.btn-success{:type=>'button', :"data-bind"=>"click: fnSaveNewEntry, disable: busy"} Save
+			.col-sm-12
+				%ul
+					%li
+						hit shift+enter to bringup the quick-key dialog for additional input spots
 		.row
 			.col-sm-9
 				.form-group
-					%input.form-control{:type=>'text', :placeholder=>'title', :'data-bind'=>"value: newEntry.title"}
-				.form-group
-					%textarea.form-control{:placeholder=>'body', :'data-bind'=>"value: newEntry.body"}
+					%label
+						Title
+					%input#title.form-control{:type=>'text', :placeholder=>'title', :'data-bind'=>"value: newEntry.title"}
+				%div{:'data-bind'=>'foreach: newEntry.bodySections'}
+					.form-group
+						%label{:'data-bind'=>'text: type'}
+						%textarea.form-control.dynamic-body-section{:'data-bind'=>"value: text"}
 			.col-sm-3
 				%form{:'data-bind'=>'submit: fnAddTag'}
 					.form-group
+						%label
+							Tags
 						%input.form-control{:type=>'text', :'data-bind'=>'value: tagInput', :placeholder=>'tag'}
 				%table.table.table-condensed{:'data-bind'=>'foreach: newEntry.tags'}
 					%tr
@@ -38,13 +48,28 @@
 			var allTags=#{all_tags.to_json};
 			var entry_post_url="#{to('/entries/new')}";
 
+			var BodySection=function(strType){
+				var self=this;
+				self.type=strType;
+				self.text=ko.observable();
+			};
+			_.extend(BodySection.prototype, {
+				toPlainJSON: function(){
+					var self=this;
+					return {
+						type: self.type,
+						text: self.text()
+					};
+				}
+			});
+
 			var Entry=function(entry_json_from_server){
 				var self=this;
 				self.url=entry_post_url;
 				entry_json_from_server || (entry_json_from_server = {});
 				self._id=entry_json_from_server._id;
 				self.title=ko.observable(entry_json_from_server.title || '');
-				self.body=ko.observable(entry_json_from_server.body || '');
+				self.bodySections=ko.observableArray(entry_json_from_server.bodySections || []);
 				self.tags=ko.observableArray(entry_json_from_server.tags || []);
 				self.created_at=entry_json_from_server.created_at ? new Date(entry_json_from_server.created_at) : new Date();
 			};
@@ -52,10 +77,12 @@
 				fnEmpty: function(){},
 				toPlainJSON: function(){
 					var self=this;
+					var arrayOfBodySections=_.map(self.bodySections(), function(section){return section.toPlainJSON();});
+					
 					return {
 						_id: self._id,
 						title: self.title(),
-						body: self.body(),
+						bodySections: arrayOfBodySections,
 						tags: self.tags(),
 						created_at: self.created_at.toISOString()
 					};
@@ -133,7 +160,47 @@
 					var self=this;
 					if(!strTagToRemove) return;
 					self.newEntry.tags.remove(strTagToRemove);
+				},
+				fnAddBodySection: function(newBodySection){
+					var self=this;
+					if(!newBodySection) return;
+					self.newEntry.bodySections.push(newBodySection);
+				},
+				fnFocusLastBodySection: function(){
+					$('.dynamic-body-section').last().focus();
 				}
 			});
-			ko.applyBindings(new ViewModel());
+
+			var viewModel = new ViewModel();
+			ko.applyBindings(viewModel);
+
+			$(document).ready(function(){
+				$("body").quickkey({
+					keys: {
+						h: {
+							description: "add a header/title",
+							cb: function(){
+								viewModel.fnAddBodySection(new BodySection("header"));
+								viewModel.fnFocusLastBodySection();
+							}
+						},
+						p: {
+							description: "add a paragraph",
+							cb: function(){
+								viewModel.fnAddBodySection(new BodySection("paragraph"));
+								viewModel.fnFocusLastBodySection();
+							}
+						},
+						c: {
+							description: "add a code block",
+							cb: function(){
+								viewModel.fnAddBodySection(new BodySection("code"));
+								viewModel.fnFocusLastBodySection();
+							}
+						}
+					}
+				});
+
+				$("input#title").focus();
+			});
 		})(jQuery,ko,_,window);//TODO - do i need jquery?
