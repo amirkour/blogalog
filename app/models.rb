@@ -53,14 +53,17 @@ class Entry<Mongooz::MongoozHash
 		end
 		def get_text_processor_for(body_type)
 			case body_type
-			when "paragraph", "header", "code"
+			when "paragraph"
 				Proc.new do |section_text|
-					break unless section_text
 					section_text=section_text.strip
-					section_text.sub(/[\n]/, "<br/>")
+				end
+			when "header"
+				Proc.new do |section_text|
+					section_text=section_text.strip
+					section_text.gsub(/[\n]/, "")
 				end
 			else
-				Proc.new{|section_text|}
+				Proc.new{|section_text| section_text}
 			end
 		end
 		def distinct_tags
