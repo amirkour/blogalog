@@ -56,6 +56,7 @@ class Entry<Mongooz::MongoozHash
 			when "paragraph"
 				Proc.new do |section_text|
 					section_text=section_text.strip
+					section_text.gsub(/[\n]/,"<br/>")
 				end
 			when "header"
 				Proc.new do |section_text|

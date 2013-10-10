@@ -2,9 +2,12 @@
 <div>{{{body}}}</div>
 {{#if tags}}
 	<hr/>
-	<div>
+	<div class="row">
+		<div class="col-xs-12">
 		{{#each tags}}
-		<a href="/#tags/{{.}}" class="btn btn-primary" style="pointer:cursor;">{{.}}</a>
+		<a style="margin-top:5px;" href="/#tags/{{.}}" class="btn btn-primary" style="pointer:cursor;">{{.}}</a>
 		{{/each}}
+		</div>
 	</div>
+	<br/>
 {{/if}}
