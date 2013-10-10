@@ -27,10 +27,25 @@ class Entry<Mongooz::MongoozHash
 				new_entry[:created_at]=Time.now.utc
 			end
 
-			new_entry[:title]=params[:title] && params[:title].length>0 ? params[:title] : nil
-			new_entry[:body]=params[:body] && params[:body].length>0 ? params[:body] : nil
-			new_entry[:tags]=params[:tags]
+			# TODO - for some reason, the json list bodySections is coming in as a hash,
+			# where the keys are the index of the element in the array, and the value is
+			# the element itself.
+			#
+			# So, I was expecting this:
+			# [{:type=>'paragraph', :text=>'some para text'}, {...}, ... ]
+			#
+			# but i'm getting this intead
+			# { "0" => {:type=>'paragraph', :text=>'some para text'}, "1" => {...}, ... }
+			if params[:bodySections] && params[:bodySections].length>0
+				body_sections=[]
+				params[:bodySections].each{|index,section| body_sections << section}
+				new_entry[:bodySections]=body_sections
+			else
+				new_entry[:bodySections]=nil
+			end
 
+			new_entry[:title]=params[:title] && params[:title].length>0 ? params[:title] : nil
+			new_entry[:tags]=params[:tags]
 			new_entry
 		end
 		def distinct_tags

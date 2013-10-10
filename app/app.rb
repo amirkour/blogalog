@@ -14,11 +14,12 @@ class Blogalog < Sinatra::Base
 		haml :"entries/new", :locals=>{:all_tags=>all_tags}
 	end
 	post '/entries/new' do
+		logger.info(params)
 		new_entry=Entry.from_request_params(params)
 		
 		halt 500, json({:error=>"Failed to retrieve new entry from request params!?"}) unless new_entry
 		halt 400, json({:error=>"Missing required title"}) unless new_entry[:title]
-		halt 400, json({:error=>"Missing required body"}) unless new_entry[:body]
+		halt 400, json({:error=>"Must have at least one body section in an entry"}) unless new_entry[:bodySections]
 
 		begin
 			new_entry.db_insert
@@ -29,11 +30,12 @@ class Blogalog < Sinatra::Base
 		json(new_entry)
 	end
 	put '/entries/new' do
+		logger.info(params)
 		entry_to_update=Entry.from_request_params(params)
 
 		halt 500, json({:error=>"Failed to retrieve new entry from request params!?"}) unless entry_to_update
 		halt 400, json({:error=>"Missing required title"}) unless entry_to_update[:title]
-		halt 400, json({:error=>"Missing required body"}) unless entry_to_update[:body]
+		halt 400, json({:error=>"Must have at least one body section in an entry"}) unless entry_to_update[:bodySections]
 
 		begin
 			entry_to_update.db_update
