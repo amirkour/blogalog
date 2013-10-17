@@ -69,13 +69,21 @@ class Blogalog < Sinatra::Base
 	#
 	get "/" do
 		result=Entry.latest
-		haml :index, :locals=>{:initial_entry=>result}
+		logged_in_user_info_hash=get_logged_in_user_info_from_session
+		haml :index, :locals=>{:initial_entry=>result, :logged_in_user_info_hash=>logged_in_user_info_hash}
 	end
 
 	helpers do
 		def logged_in?
 			#todo
 			true
+		end
+		def store_logged_in_user_info_in_session(info_hash_from_oauth)
+			session[:oauth_info]=info_hash_from_oauth
+			info_hash_from_oauth
+		end
+		def get_logged_in_user_info_from_session
+			session[:oauth_info]
 		end
 	end
 end

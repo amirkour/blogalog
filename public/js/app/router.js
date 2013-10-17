@@ -8,13 +8,19 @@ define([ 'backbone', 'views/views', 'models/models', 'module'],
 				"about": "aboutRoute",
 				"tags": "tagsHomeRoute",
 				"tags/:name": "tagsSpecificRoute",
-				"entries/:id": "entryRoute"
+				"entries/:id": "entryRoute",
+				"authorized": "homeRoute"			// is the redirect after logging in succeeds
 			},
 
 			homeRoute: function(){
+
+				// blog entry to display, as well as logged-in user info are bootstrapped from layout.haml
 				var pageConfig=module.config() || {};
-				var initialModelJSON=pageConfig.initialEntry || {title: "no entries detected!?", body: "phooey ..."};
-				var model=new Models.EntryModel(initialModelJSON);
+				var blogEntry=pageConfig.initialEntry;
+				var loggedInUser=pageConfig.loggedInUser;
+
+				// home page model is just arbitrary json in this case - no an actual BB model
+				var model={blogEntry: blogEntry, loggedInUser: loggedInUser};
 				var view=new Views.HomeView({model: model});
 				view.render();
 			},
@@ -54,10 +60,14 @@ define([ 'backbone', 'views/views', 'models/models', 'module'],
 			},
 
 			entryRoute: function(id){
+				var pageConfig=module.config() || {};
+				var loggedInUser=pageConfig.loggedInUser;
+
 				var model=new Models.EntryModel({id:id});
 				model.fetch({
 					success: function(model, response, options){
-						var view=new Views.HomeView({model: model});
+						var homeViewModel={blogEntry: model.attributes, loggedInUser: loggedInUser};
+						var view=new Views.HomeView({model: homeViewModel});
 						view.render();
 					},
 					error: function(model, response, options){

@@ -11,3 +11,12 @@
 	</div>
 	<br/>
 {{/if}}
+
+{{#if user}}
+	<hr/>
+	Logged in as {{user.name}} <img src="{{user.image_url}}" />
+{{else}}
+	<hr/>
+	<a href="/auth/google_oauth2">Login with google</a><br/>
+	<a href="/auth/facebook">Login with FB</a>
+{{/if}}

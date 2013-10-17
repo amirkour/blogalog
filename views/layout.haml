@@ -12,12 +12,13 @@
 			%script{:type=>"text/javascript", :src=>"/js/lib/knockout.js"}
 			%script{:type=>"text/javascript", :src=>"/js/lib/bootstrap.js"}
 			%script{:type=>"text/javascript", :src=>"/js/lib/blogalog.quickkey.js"}
-		-elsif initial_entry
+		-elsif initial_entry || logged_in_user_info_hash
 			:javascript
 				var require={
 					config: {
 						'app/router': {
-							initialEntry: #{initial_entry.to_json}
+							initialEntry: #{initial_entry.to_json},
+							loggedInUser: #{logged_in_user_info_hash.to_json}
 						}
 					}
 				};
