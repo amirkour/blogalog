@@ -1,15 +1,13 @@
 define(['jquery', 'backbone', 'handlebars', 'models/entrycollection', 'text!templates/tag.html'], function($, Backbone, Handlebars, EntryCollection, strHtml){
 	return Backbone.View.extend({
-		initialize: function(options){
-			this.$el = $("div#pageBody");
-			this.templateFn = Handlebars.compile(strHtml);
-		},
+		el: "div#pageBody",
+		template: Handlebars.compile(strHtml),
 		render: function(){
 			var pViewModel = {
 				tag: this.model.attributes,
 				entries: this.collection.toJSON()
 			};
-			this.$el.html(this.templateFn(pViewModel));
+			this.$el.html(this.template(pViewModel));
 			return this;
 		}
 	});
